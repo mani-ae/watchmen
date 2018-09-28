@@ -1,52 +1,52 @@
-var colors = require('colors');
-var program = require('commander');
-var pluginLoader = require('./lib/plugin-loader');
-var storageFactory = require('./lib/storage/storage-factory');
-var WatchMenFactory = require('./lib/watchmen');
-var sentinelFactory = require('./lib/sentinel');
+/*
+const p = new Promise((resolve, reject) =>
+{
+ setTimeout( 
+   function() 
+   {
+     resolve(1);
+     reject(new Error('message'));
+   }, 2000);
+});
 
-var RETURN_CODES = {
-  OK: 0,
-  BAD_STORAGE: 1,
-  GENERIC_ERROR: 2
-};
+p
+ .then(result => console.log('Results', result))
+ .catch(err => console.log('Error', err.message));
+ */
 
-function exit(code) {
-  storage.quit();
-  process.exit(code);
+function intervalFunc() {
+  console.log('Cant stop me now!');
 }
 
-program
-    .option('-e, --env [env]', 'Storage environment key', process.env.NODE_ENV || 'development')
-    .option('-d, --max-initial-delay [value]', 'Initial random delay max bound', 20000)
-    .parse(process.argv);
+function seleniumTest() {
+  var webdriver = require('selenium-webdriver'),
+                    By = webdriver.By,
+                    until = webdriver.until;
 
-var storage = storageFactory.getStorageInstance(program.env);
-if (!storage) {
-  console.error('Error creating storage for env: ', program.env);
-  return process.exit(RETURN_CODES.BAD_STORAGE);
-}
+  var driver = new webdriver.Builder()
+    .forBrowser('chrome')
+    .build();
 
-storage.getServices({}, function (err, services) {
-  if (err) {
-    console.error('error loading services'.red);
-    console.error(err);
-    return exit(RETURN_CODES.GENERIC_ERROR);
-  }
+  driver.get('http://www.google.com');
 
-  var watchmen = new WatchMenFactory(services, storage);
+  driver.findElement(By.name('q')).sendKeys('webdriver');
 
-  pluginLoader.loadPlugins(watchmen, {}, function(){
-    watchmen.startAll({randomDelayOnInit: program.maxInitialDelay});
-    console.log('\nwatchmen has started. ' + services.length + ' services loaded\n');
-
-    var sentinel = new sentinelFactory(storage, watchmen, {interval: 10000});
-    sentinel.watch();
+  driver.sleep(1000).then(function() {
+    driver.findElement(By.name('q')).sendKeys(webdriver.Key.ENTER);
   });
 
-});
+  //driver.findElement(By.name('btnK')).click();
 
-process.on('SIGINT', function () {
-  console.log('stopping watchmen..'.gray);
-  exit(RETURN_CODES.OK);
-});
+  driver.sleep(10000).then(function() {
+    driver.getTitle().then(function(title) {
+      if(title === 'webdriver - Google Search') {
+        console.log('Test passed');
+      }   else {
+        console.log('Test failed');
+      }
+      driver.quit();
+    });
+  });
+}
+
+setInterval(seleniumTest, 30000);
