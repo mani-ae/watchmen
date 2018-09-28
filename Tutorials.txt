@@ -1,0 +1,12 @@
+Tutorials:
+
+Node.js: 
+http://www.tutorialsteacher.com/nodejs/nodejs-module-exports
+
+Angular
+https://docs.angularjs.org/tutorial/step_00
+
+https://angular.io/guide/quickstart
+for angular2+ in ts
+
+https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/routes

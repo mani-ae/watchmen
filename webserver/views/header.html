@@ -11,10 +11,10 @@
         </div>
         <div class="navbar-collapse collapse" id="main-nav-bar">
             <ul class="nav navbar-nav navbar-right">
-                <% if ((user && user.isAdmin) || no_auth) { %>
+              <% if ((user && user.isAdmin) || no_auth) { %> 
                 <li>
                     <a ui-sref="newService" class="btn">Add New Service</a>
-                </li>
+                </li> 
                 <% } %>
                 <% if (user) { %>
                 <li class="dropdown">
